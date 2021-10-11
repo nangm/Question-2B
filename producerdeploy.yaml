@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producerapi
+spec:
+  selector:
+    matchLabels:
+      app: producerapi
+  template:
+    metadata:
+      labels:
+        app: producerapi
+    spec:
+      containers:
+      - name: producerapi
+        image: nangm/producerapi:latest
+        env:
+        - name: RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: RABBITMQ_PORT
+          value: "5672"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: producerapi
+spec:
+  type: NodePort
+  selector:
+    app: producerapi
+  ports:
+  - port: 80
+    targetPort: 5000
+    nodePort: 31500
